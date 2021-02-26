@@ -20,9 +20,12 @@ class QuestionView extends Component {
   componentDidMount() {
     this.getQuestions();
   }
+  componentWillMount(){
+  }
 
   getQuestions = () => {
     let search_term=document.getElementsByClassName("search_term")[0].value;
+    document.getElementsByClassName('list')[0].classList.add('active');
     $.ajax({
       url: `http://127.0.0.1:5000/questions?page=${this.state.page}&search_term=${search_term}`, //TODO: update request URL
       type: "GET",
@@ -60,6 +63,11 @@ class QuestionView extends Component {
   }
 
   getByCategory= (id) => {
+    let categoryList= document.getElementsByClassName('categories-list')[0].getElementsByTagName('LI');
+    for (let index = 0; index < categoryList.length; index++) {
+      categoryList[index].classList.remove('active');
+    }
+    document.getElementsByClassName('category'+id)[0].classList.add('active');
     $.ajax({
       url: `http://127.0.0.1:5000/categories/${id}/questions`, //TODO: update request URL
       type: "GET",
@@ -127,7 +135,7 @@ class QuestionView extends Component {
           <h2 onClick={() => {this.getQuestions()}}>Categories</h2>
           <ul>
             {Object.keys(this.state.categories).map((id) => (
-              <li key={id} onClick={() => {this.getByCategory(this.state.categories[id].id)}}>
+              <li className={`category${this.state.categories[id].id}`} key={id} onClick={() => {this.getByCategory(this.state.categories[id].id)}}>
                 {this.state.categories[id].type}
                 <img className="category" src={`${this.state.categories[id].type}.svg`}/>
               </li>

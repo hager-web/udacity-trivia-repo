@@ -21,6 +21,7 @@ class QuizView extends Component {
   }
 
   componentDidMount(){
+    document.getElementsByClassName('play')[0].classList.add('active');
     $.ajax({
       url: `http://127.0.0.1:5000/categories`, //TODO: update request URL
       type: "GET",
@@ -44,8 +45,8 @@ class QuizView extends Component {
   }
 
   getNextQuestion = () => {
-    const previousQuestions = [this.state.previousQuestions]
-    if(this.state.currentQuestion.id) { previousQuestions.push(this.state.currentQuestion.id) }
+    // const previousQuestions = [this.state.previousQuestions]
+    if(this.state.currentQuestion.id) { this.state.previousQuestions.push(this.state.currentQuestion.id) }
 
     $.ajax({
       url: 'http://127.0.0.1:5000/quizzes', //TODO: update request URL
@@ -53,7 +54,7 @@ class QuizView extends Component {
       dataType: 'json',
       contentType: 'application/json',
       data: JSON.stringify({
-        previous_questions: previousQuestions,
+        previous_questions: this.state.previousQuestions,
         quiz_category: this.state.quizCategory
       }),
       xhrFields: {
@@ -63,7 +64,7 @@ class QuizView extends Component {
       success: (result) => {
         this.setState({
           showAnswer: false,
-          previousQuestions: previousQuestions,
+          previousQuestions: this.state.previousQuestions,
           currentQuestion: result.question,
           guess: '',
           forceEnd: result.question ? false : true

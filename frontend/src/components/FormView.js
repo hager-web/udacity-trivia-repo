@@ -16,6 +16,8 @@ class FormView extends Component {
   }
 
   componentDidMount(){
+    
+    document.getElementsByClassName('add')[0].classList.add('active');
     $.ajax({
       url: `http://127.0.0.1:5000/categories`, //TODO: update request URL
       type: "GET",
