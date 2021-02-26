@@ -173,41 +173,32 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertEqual(data["message"], "resource not found")
     
-def test_play_quiz_questions(self):
-        """Tests playing quiz questions"""
-
-        # mock request data
+    def test_play_quiz_questions(self):
         request_data = {
-            'previous_questions': [5, 9],
+            'previous_questions': [2, 4],
             'quiz_category': {
                 'type': 'History',
-                'id': 4
+                'id': '4'
             }
         }
-
-        # make request and process response
         response = self.client().post('/quizzes', json=request_data)
         data = json.loads(response.data)
 
-        # Assertions
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['question'])
+        self.assertNotEqual(data['question']['id'], 2)
+        self.assertNotEqual(data['question']['id'], 4)
+        self.assertEqual(data['question']['category'], '4')
 
-        # Ensures previous questions are not returned
-        self.assertNotEqual(data['question']['id'], 5)
-        self.assertNotEqual(data['question']['id'], 9)
+    def test_422_play_quiz_fails(self):
+        new_quiz_round = {'previous_questions': []}
+        res = self.client().post('/quizzes', json=new_quiz_round)
+        data = json.loads(res.data)
 
-        # Ensures returned question is in the correct category
-        self.assertEqual(data['question']['category'], 4)
-    # def test_422_play_quiz_fails(self):
-    #     new_quiz_round = {'previous_questions': []}
-    #     res = self.client().post('/quizzes', json=new_quiz_round)
-    #     data = json.loads(res.data)
-
-    #     self.assertEqual(res.status_code, 422)
-    #     self.assertEqual(data["success"], False)
-    #     self.assertEqual(data["message"], "unprocessable")
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data["success"], False)
+        self.assertEqual(data["message"], "unprocessable")
 
 
 # Make the tests conveniently executable

@@ -217,7 +217,7 @@ def create_app(test_config=None):
     quiz_category = data.get('quiz_category')
 
     if ((quiz_category is None) or (previous_questions is None)):
-      abort(400)
+      abort(422)
 
     if (quiz_category['id'] == 0):
       questions = Question.query.all()
