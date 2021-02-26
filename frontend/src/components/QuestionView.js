@@ -24,10 +24,9 @@ class QuestionView extends Component {
   }
 
   getQuestions = () => {
-    let search_term=document.getElementsByClassName("search_term")[0].value;
     document.getElementsByClassName('list')[0].classList.add('active');
     $.ajax({
-      url: `http://127.0.0.1:5000/questions?page=${this.state.page}&search_term=${search_term}`, //TODO: update request URL
+      url: `http://127.0.0.1:5000/questions?page=${this.state.page}`, //TODO: update request URL
       type: "GET",
       success: (result) => {
         this.setState({
@@ -45,7 +44,13 @@ class QuestionView extends Component {
   }
 
   selectPage(num) {
-    this.setState({page: num}, () => this.getQuestions());
+    const search_term=document.getElementsByClassName("search_term")[0].value;
+    console.log(search_term)
+    if(search_term ==""){
+      this.setState({page: num}, () => this.getQuestions());
+    }else{
+      this.setState({page: num}, () => this.submitSearch(search_term));
+    }
   }
 
   createPagination(){
@@ -87,7 +92,7 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `http://127.0.0.1:5000/questions/search`, //TODO: update request URL
+      url: `http://127.0.0.1:5000/questions/search?page=${this.state.page}`, //TODO: update request URL
       type: "POST",
       dataType: 'json',
       contentType: 'application/json',

@@ -76,6 +76,8 @@ GET ...
 POST ...
 DELETE ...
 
+# Endpoints
+
 GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
@@ -88,6 +90,95 @@ GET '/categories'
 '6' : "Sports"}
 
 ```
+GET '/questions'
+- Get a list of all questions with pagination every 10 questions  
+- Request Arguments: page number as integer
+- Returns: an object of 
+    {
+      'success': True when status code is 200,
+      'questions': the list of questions,
+      'total_questions': number of totlal questions,
+      'current_category': None to get all of questions for all categories,
+      'categories': list of category
+    }
+- Sample: `curl http://127.0.0.1:5000/questions?page=1`
+
+````
+DELETE '/questions/<int:question_id>'
+- To DELETE question using a question ID  
+- Request Arguments: question_id as integer
+- Returns: an object of 
+    {
+        'success': True when status code is 200,
+        'deleted': id of deleted question,
+        'questions': list of all questions with pagnation,
+        'total_questions': total number of cuurent questions
+    }
+- Sample: `curl http://127.0.0.1:5000/questions/6 -X DELETE`
+
+````
+POST '/questions'
+- To create a new question    
+- Request Arguments: question as string , answer as string, category as integer for category id, difficulty as integer
+- Returns: an object of 
+    {
+        'success': True when status code 200,
+        'created': id of created question,
+        'total_questions': total number of cuurent questions
+      }
+- Sample: `curl http://127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{
+            "question": "New Question",
+            "answer": "New Answer",
+            "difficulty": 4,
+            "category": "1"
+        }'`
+
+````
+POST '/questions/search'
+- To get questions based on a search term. 
+  It should return any questions for whom the search term is a substring of the question. 
+- Request Arguments: searchTerm as string
+- Returns: an object of 
+    {
+        'success': True when status code 200,
+        'questions': list of questions based on search term,
+        'total_questions': total number of cuurent questions
+        'current_category': None
+      }
+- Sample: `curl http://127.0.0.1:5000/questions/search -X POST -H "Content-Type: application/json" -d '{"searchTerm": "what"}'`
+
+````
+GET '/categories/<int:category_id>/questions'
+- To get questions based on category. 
+- Request Arguments: category_id as int
+- Returns: an object of 
+    {
+        'success': True when status code 200,
+        'questions': list of questions based on category,
+        'total_questions': total number of questions based on category
+        'current_category': category id
+      }
+- Sample: `curl http://127.0.0.1:5000/categories/1/questions`
+
+````
+GET '/categories/<int:category_id>/questions'
+- Endpoint to get questions to play the quiz. 
+  This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
+- Request Arguments: previous_questions as list of ids for previous questions, quiz_category as object of category
+- Returns: an object of 
+    {
+        'success': True when status code 200,
+        'question': question
+    }
+- Sample: `curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [2, 4],"quiz_category": {"type": "History", "id": "4"}}'`
+
+
+````
+# Error Handlers
+- Error handlers for all expected errors including 404 and 422 and 400
+- 404 for resource not found
+- 422 for unprocessable
+- 400 for bad request
 
 
 ## Testing

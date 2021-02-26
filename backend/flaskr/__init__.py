@@ -72,11 +72,7 @@ def create_app(test_config=None):
   '''
   @app.route('/questions')
   def retrieve_questions():
-    search_term=request.args.get('search_term', "", type=str)
-    if search_term!="":
-        selection = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
-    else:
-       selection = Question.query.order_by(Question.id).all()
+    selection = Question.query.order_by(Question.id).all()
     current_questions = paginate_questions(request, selection)
 
     categories= Category.query.order_by(Category.id).all()
