@@ -176,10 +176,21 @@ GET '/categories/<int:category_id>/questions'
 ````
 # Error Handlers
 - Error handlers for all expected errors including 404 and 422 and 400
-- 404 for resource not found
-- 422 for unprocessable
-- 400 for bad request
 
+  Errors
+
+  400 -- Bad request
+  404 -- Not found
+  422 -- Not processable
+  500 -- Internal Server Error
+
+  Sample response
+
+  {
+    "error": 422,
+    "message": "Not processable",
+    "success": false
+  }
 
 ## Testing
 To run the tests, run
